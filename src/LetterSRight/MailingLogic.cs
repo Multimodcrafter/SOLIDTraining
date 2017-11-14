@@ -4,18 +4,18 @@ namespace LetterSRight
 {
     internal class MailingLogic
     {
-        private readonly EmailAddressFileReader emailAddressFileReader = new EmailAddressFileReader();
-        private readonly EmailAddressValidator emailAddressValidator = new EmailAddressValidator();
-        private readonly EmailSender emailSender = new EmailSender();
+        private readonly EmailAddressFileReader _emailAddressFileReader = new EmailAddressFileReader();
+        private readonly EmailAddressValidator _emailAddressValidator = new EmailAddressValidator();
+        private readonly EmailSender _emailSender = new EmailSender();
 
         public void ProcessMailing(string filepath)
         {
-            var addresses = emailAddressFileReader.ReadMailAddressesFromFile(filepath);
+            var addresses = _emailAddressFileReader.ReadMailAddressesFromFile(filepath);
 
-            foreach (var emailAddress in addresses.Where(a => emailAddressValidator.IsValid(a)))
+            foreach (var emailAddress in addresses.Where(a => _emailAddressValidator.IsValid(a)))
             {
                 var mailContent = GetMailContentFor(emailAddress);
-                emailSender.SendMail(emailAddress, mailContent.Subject, mailContent.Body);
+                _emailSender.SendMail(emailAddress, mailContent.Subject, mailContent.Body);
             }
         }
 
