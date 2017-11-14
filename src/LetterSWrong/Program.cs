@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 
@@ -62,12 +63,16 @@ namespace LetterSWrong
                     Console.WriteLine();
                     Console.WriteLine($"Sending message from:{mailMessage.From}, to:{mailMessage.To}, subject:{mailMessage.Subject}, body:{mailMessage.Body}");
 
-                    //var client = new SmtpClient("localhost")
-                    //{
-                    //    UseDefaultCredentials = false,
-                    //    Credentials = new NetworkCredential("username", "password")
-                    //};
-                    //client.Send(mailMessage);
+                    // Access: https://mailtrap.io/
+                    // UName: christoph.koenig@isolutions.ch
+                    // PW: 123456
+                    var client = new SmtpClient("smtp.mailtrap.io", 2525)
+                    {
+                        Credentials = new NetworkCredential("2e5239bd361ded", "c92461365296ff"),
+                        EnableSsl = true
+                    };
+
+                    client.Send(mailMessage);
                 }
             }
             catch (Exception ex)
