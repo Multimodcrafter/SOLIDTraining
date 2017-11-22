@@ -4,7 +4,7 @@ using System.Net.Mail;
 
 namespace LetterORight
 {
-    internal class EmailSender
+    public class EmailSender : IEmailSender
     {
         public void SendMail(string to, string subject, string body)
         {

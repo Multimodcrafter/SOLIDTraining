@@ -5,9 +5,17 @@ namespace LetterORight
 {
     public class MailingLogic
     {
-        private readonly EmailAddressFileReader _emailAddressFileReader = new EmailAddressFileReader();
-        private readonly EmailAddressValidator _emailAddressValidator = new EmailAddressValidator();
-        private readonly EmailSender _emailSender = new EmailSender();
+        private readonly IEmailAddressFileReader _emailAddressFileReader;
+        private readonly IEmailAddressValidator _emailAddressValidator;
+        private readonly IEmailSender _emailSender;
+
+        /// <summary>Initializes a new instance of the <see cref="T:System.Object"></see> class.</summary>
+        public MailingLogic(IEmailSender emailSender = null, IEmailAddressValidator emailAddressValidator = null, IEmailAddressFileReader emailAddressFileReader = null)
+        {
+            _emailAddressFileReader = emailAddressFileReader ?? new EmailAddressFileReader();
+            _emailAddressValidator = emailAddressValidator ?? new EmailAddressValidator();
+            _emailSender = emailSender ?? new EmailSender();
+        }
 
         public void ProcessMailing(string filepath)
         {
@@ -24,7 +32,7 @@ namespace LetterORight
         {
             _emailSender.SendMail(emailAddress, mailContent.Subject, mailContent.Body);
         }
-        
+
         protected virtual IEnumerable<string> GetEmailAddresses(string filepath)
         {
             return _emailAddressFileReader.ReadMailAddressesFromFile(filepath);

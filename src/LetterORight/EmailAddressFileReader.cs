@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LetterORight
 {
-    internal class EmailAddressFileReader
+    public class EmailAddressFileReader : IEmailAddressFileReader
     {
         public IEnumerable<string> ReadMailAddressesFromFile(string filePath)
         {
