@@ -1,41 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace LetterORight
 {
     public class MailingLogic
     {
-        private readonly IEmailAddressFileReader _emailAddressFileReader;
+        private readonly IEmailAddressProvider _emailAddressProvider;
         private readonly IEmailAddressValidator _emailAddressValidator;
         private readonly IEmailSender _emailSender;
 
-        /// <summary>Initializes a new instance of the <see cref="T:System.Object"></see> class.</summary>
-        public MailingLogic(IEmailSender emailSender = null, IEmailAddressValidator emailAddressValidator = null, IEmailAddressFileReader emailAddressFileReader = null)
+        public MailingLogic(IEmailSender emailSender, IEmailAddressValidator emailAddressValidator, IEmailAddressProvider emailAddressProvider)
         {
-            _emailAddressFileReader = emailAddressFileReader ?? new EmailAddressFileReader();
-            _emailAddressValidator = emailAddressValidator ?? new EmailAddressValidator();
-            _emailSender = emailSender ?? new EmailSender();
+            _emailSender = emailSender;
+            _emailAddressValidator = emailAddressValidator;
+            _emailAddressProvider = emailAddressProvider;
         }
 
-        public void ProcessMailing(string filepath)
+        public void ProcessMailing()
         {
-            var addresses = GetEmailAddresses(filepath);
+            var addresses = _emailAddressProvider.GetMailAddresses();
 
             foreach (var emailAddress in addresses.Where(a => _emailAddressValidator.IsValid(a)))
             {
                 var mailContent = GetMailContentFor(emailAddress);
-                SendEmail(emailAddress, mailContent);
+                _emailSender.SendMail(emailAddress, mailContent.Subject, mailContent.Body);
             }
-        }
-
-        protected virtual void SendEmail(string emailAddress, MailContent mailContent)
-        {
-            _emailSender.SendMail(emailAddress, mailContent.Subject, mailContent.Body);
-        }
-
-        protected virtual IEnumerable<string> GetEmailAddresses(string filepath)
-        {
-            return _emailAddressFileReader.ReadMailAddressesFromFile(filepath);
         }
 
         protected virtual MailContent GetMailContentFor(string recipient)

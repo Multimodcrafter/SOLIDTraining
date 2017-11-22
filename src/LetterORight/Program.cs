@@ -8,8 +8,9 @@ namespace LetterORight
         {
             try
             {
-                var logic = new MailingLogic();
-                logic.ProcessMailing("MailListFile.txt");
+                var filePath = "MailListFile.txt";
+                var logic = new MailingLogic(new EmailSender(), new EmailAddressValidator(), new EmailAddressFileReader(filePath));
+                logic.ProcessMailing();
             }
             catch (Exception ex)
             {
